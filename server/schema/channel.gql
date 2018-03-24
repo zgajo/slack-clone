@@ -1,0 +1,10 @@
+type Channel {
+  id: Int!
+  name: String!
+  messages: [Message!]! #array of messages
+  users: [User!]!
+}
+
+type Mutation {
+  createChannel(name: String!, teamId: Int!, public: Boolean = false): Boolean! #returns user after insert
+}
