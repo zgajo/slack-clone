@@ -1,15 +1,22 @@
 type User {
   id: Int!
-  username: String
+  username: String!
   email: String!
   teams: [Team!]!
-}
-
-type Mutation {
-  register(username: String!, email: String!, password: String!): Boolean! #returns user after insert
 }
 
 type Query {
   getUser(id: Int!): User! #returns user after insert
   allUsers: [User!]! #returns user after insert
 }
+
+type Mutation {
+  register(username: String!, email: String!, password: String!): RegisterResponse! #returns user after insert
+}
+
+type RegisterResponse{
+  ok: Boolean!
+  user: User
+  errors: [Error!]
+}
+

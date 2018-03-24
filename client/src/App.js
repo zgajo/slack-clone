@@ -8,5 +8,5 @@ export default () => (
   <Switch>
     <Route path="/register" component={Register} />;
     <Route path="/" component={Home} />;
-</Switch>
+  </Switch>
 );

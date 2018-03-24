@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Header, Container, Input, Button } from "semantic-ui-react";
+import { Header, Container, Input, Button, Message } from "semantic-ui-react";
 import { graphql } from "react-apollo";
 import gql from "graphql-tag";
 
@@ -8,7 +8,11 @@ class Register extends Component {
     state = {
         username: '',
         password: "",
-        email: ""
+        email: "",
+        usernameError: '',
+        passwordError: "",
+        emailError: "",
+
     }
 
     onChange = e => {
@@ -17,20 +21,66 @@ class Register extends Component {
     }
 
     onSubmit = async () => {
-        const response = await this.props.mutate({
-            variables: this.state
+
+        this.setState({
+            usernameError: '',
+            passwordError: "",
+            emailError: "",
         })
-        console.log(response)
+
+        const { username, password, email } = this.state
+
+        const response = await this.props.mutate({
+            variables: { username, password, email }
+        })
+
+        const { ok, errors } = response.data.register
+
+        if (ok) {
+            this.props.history.push("/")
+        }
+        else {
+            this.errorHandler(errors)
+        }
+
+    }
+
+    errorHandler(errors) {
+        const err = {}
+        errors.forEach(({ path, message }) => {
+            err[`${path}Error`] = message
+        });
+
+        this.setState(err)
     }
 
     render() {
+
+        let msg = null;
+
+        if (this.state.usernameError || this.state.passwordError || this.state.emailError) {
+            const errorList = []
+
+            if (this.state.usernameError) errorList.push(this.state.usernameError)
+            if (this.state.passwordError) errorList.push(this.state.passwordError)
+            if (this.state.emailError) errorList.push(this.state.emailError)
+
+            msg = <Message
+                error
+                header='There was some errors with your submission'
+                list={errorList}
+            />
+        }
+
         return (
             <Container>
                 <Header as="h2">Register</Header>
-                <Input name="username" onChange={e => this.onChange(e)} placeholder="Username" fluid />
-                <Input name="password" onChange={e => this.onChange(e)} placeholder="Password" fluid type="password" />
-                <Input name="email" onChange={e => this.onChange(e)} placeholder="Email" fluid type="email" />
+                <Input name="username" onChange={e => this.onChange(e)} placeholder="Username" fluid error={!!this.state.usernameError} />
+                <Input name="email" onChange={e => this.onChange(e)} placeholder="Email" fluid type="email" error={!!this.state.emailError} />
+                <Input name="password" onChange={e => this.onChange(e)} placeholder="Password" fluid type="password" error={!!this.state.passwordError} />
                 <Button onClick={this.onSubmit}>Submit</Button>
+                {msg}
+
             </Container>
         )
     }
@@ -39,7 +89,13 @@ class Register extends Component {
 
 const registerMutation = gql`
 mutation ($username:String!, $email:String!, $password:String!){
-  register(username:$username, email:$email, password:$password)
+   register(username:$username, email:$email, password:$password){
+    ok
+    errors{
+      path
+      message
+    }
+  }
 }
 `
 
