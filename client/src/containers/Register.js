@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Header, Container, Input, Button, Message } from "semantic-ui-react";
+import { Header, Container, Input, Button, Message, Form } from "semantic-ui-react";
 import { graphql } from "react-apollo";
 import gql from "graphql-tag";
 
@@ -75,12 +75,21 @@ class Register extends Component {
         return (
             <Container>
                 <Header as="h2">Register</Header>
-                <Input name="username" onChange={e => this.onChange(e)} placeholder="Username" fluid error={!!this.state.usernameError} />
-                <Input name="email" onChange={e => this.onChange(e)} placeholder="Email" fluid type="email" error={!!this.state.emailError} />
-                <Input name="password" onChange={e => this.onChange(e)} placeholder="Password" fluid type="password" error={!!this.state.passwordError} />
-                <Button onClick={this.onSubmit}>Submit</Button>
-                {msg}
+                <Form>
+                    <Form.Field>
+                        <Input name="username" onChange={e => this.onChange(e)} placeholder="Username" fluid error={!!this.state.usernameError} />
+                    </Form.Field>
+                    <Form.Field>
+                        <Input name="email" onChange={e => this.onChange(e)} placeholder="Email" fluid type="email" error={!!this.state.emailError} />
+                    </Form.Field>
+                    <Form.Field>
+                        <Input name="password" onChange={e => this.onChange(e)} placeholder="Password" fluid type="password" error={!!this.state.passwordError} />
+                    </Form.Field>
 
+                    <Button onClick={this.onSubmit}>Submit</Button>
+                    {msg}
+
+                </Form>
             </Container>
         )
     }

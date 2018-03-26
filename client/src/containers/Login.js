@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { graphql } from "react-apollo";
 import gql from "graphql-tag";
-import { Header, Container, Input, Button, Message } from "semantic-ui-react";
+import { Header, Container, Input, Button, Message, Form } from "semantic-ui-react";
 
 import { changeEmail, changePassword } from "../shared/actions/userActions";
 
@@ -74,24 +74,32 @@ class Login extends Component {
     return (
       <Container>
         <Header as="h2">Login</Header>
-        <Input
-          name="email"
-          onChange={e => this.props.onEmailChange(e.target.value)}
-          placeholder="Email"
-          fluid
-          type="email"
-          error={!!this.state.emailError}
-        />
-        <Input
-          name="password"
-          onChange={e => this.props.onPasswordChange(e.target.value)}
-          placeholder="Password"
-          fluid
-          type="password"
-          error={!!this.state.passwordError}
-        />
-        {msg}
-        <Button onClick={this.onSubmit}>Submit</Button>
+        <Form>
+          <Form.Field>
+            <Input
+              name="email"
+              onChange={e => this.props.onEmailChange(e.target.value)}
+              placeholder="Email"
+              fluid
+              type="email"
+              error={!!this.state.emailError}
+            />
+          </Form.Field>
+          <Form.Field>
+            <Input
+              name="password"
+              onChange={e => this.props.onPasswordChange(e.target.value)}
+              placeholder="Password"
+              fluid
+              type="password"
+              error={!!this.state.passwordError}
+            />
+          </Form.Field>
+
+          {msg}
+          <Button onClick={this.onSubmit}>Submit</Button>
+
+        </Form>
       </Container>
     );
   }
