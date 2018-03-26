@@ -12,6 +12,14 @@ type Query {
 
 type Mutation {
   register(username: String!, email: String!, password: String!): RegisterResponse! #returns user after insert
+  login(email:String!,password:String): LoginResponse!
+}
+
+type LoginResponse{
+  ok: Boolean!
+  token: String
+  refreshToken: String
+  errors: [Error!]
 }
 
 type RegisterResponse{

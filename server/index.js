@@ -21,6 +21,9 @@ const app = express();
 
 app.use(cors("*"));
 
+const SECRET = "sdfAsds:_:As!"
+const SECRET2 = "23213$%&$#$LKJdsš"
+
 // The GraphQL endpoint
 app.use(
   "/graphql",
@@ -31,7 +34,9 @@ app.use(
       models,
       user: {
         id: 1
-      }
+      },
+      SECRET,
+      SECRET2
     }
   })
 );

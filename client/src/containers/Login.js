@@ -1,20 +1,76 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Header, Container, Input, Button } from "semantic-ui-react";
+import { graphql } from "react-apollo";
+import gql from "graphql-tag";
+import { Header, Container, Input, Button, Message } from "semantic-ui-react";
 
 import { changeEmail, changePassword } from "../shared/actions/userActions";
 
 class Login extends Component {
+
+
   constructor(props) {
     super(props);
 
     this.state = {
-      password: "",
-      email: ""
+      emailError: "",
+      passwordError: ""
     };
   }
 
+  onSubmit = async () => {
+
+    this.setState({
+      passwordError: "",
+      emailError: "",
+    })
+
+    const response = await this.props.mutate({
+      variables: { ...this.props.user }
+    });
+
+    const { ok, token, refreshToken, errors } = response.data.login;
+
+    if (ok) {
+      this.storeTokens(token, refreshToken)
+    }
+    else {
+      this.errorHandler(errors)
+    }
+
+  }
+
+  storeTokens(token, refreshToken) {
+    localStorage.setItem("token", token);
+    localStorage.setItem("refreshToken", refreshToken)
+  }
+
+  errorHandler(errors) {
+    const err = {}
+    errors.forEach(({ path, message }) => {
+      err[`${path}Error`] = message
+    });
+
+    this.setState(err)
+  }
+
   render() {
+
+    let msg = null;
+
+    if (this.state.passwordError || this.state.emailError) {
+      const errorList = []
+
+      if (this.state.passwordError) errorList.push(this.state.passwordError)
+      if (this.state.emailError) errorList.push(this.state.emailError)
+
+      msg = <Message
+        error
+        header='There was some errors with your login'
+        list={errorList}
+      />
+    }
+
     return (
       <Container>
         <Header as="h2">Login</Header>
@@ -34,6 +90,7 @@ class Login extends Component {
           type="password"
           error={!!this.state.passwordError}
         />
+        {msg}
         <Button onClick={this.onSubmit}>Submit</Button>
       </Container>
     );
@@ -44,6 +101,7 @@ class Login extends Component {
 const mapStateToProps = state => ({
   user: state.user
 });
+
 const mapDispatchToPros = dispatch => {
   return {
     onEmailChange: email => dispatch(changeEmail(email)),
@@ -51,4 +109,18 @@ const mapDispatchToPros = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToPros)(Login);
+const loginMutation = gql`
+  mutation($email:String!, $password:String!){
+    login(email:$email, password:$password) {
+      ok
+      token
+      refreshToken
+      errors {
+        path
+        message
+      }
+    }
+  }
+`
+
+export default connect(mapStateToProps, mapDispatchToPros)(graphql(loginMutation)(Login));
