@@ -2,13 +2,18 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { graphql } from "react-apollo";
 import gql from "graphql-tag";
-import { Header, Container, Input, Button, Message, Form } from "semantic-ui-react";
+import {
+  Header,
+  Container,
+  Input,
+  Button,
+  Message,
+  Form
+} from "semantic-ui-react";
 
 import { changeEmail, changePassword } from "../shared/actions/userActions";
 
 class Login extends Component {
-
-
   constructor(props) {
     super(props);
 
@@ -19,11 +24,10 @@ class Login extends Component {
   }
 
   onSubmit = async () => {
-
     this.setState({
       passwordError: "",
-      emailError: "",
-    })
+      emailError: ""
+    });
 
     const response = await this.props.mutate({
       variables: { ...this.props.user }
@@ -32,43 +36,42 @@ class Login extends Component {
     const { ok, token, refreshToken, errors } = response.data.login;
 
     if (ok) {
-      this.storeTokens(token, refreshToken)
+      this.storeTokens(token, refreshToken);
+    } else {
+      this.errorHandler(errors);
     }
-    else {
-      this.errorHandler(errors)
-    }
-
-  }
+  };
 
   storeTokens(token, refreshToken) {
     localStorage.setItem("token", token);
-    localStorage.setItem("refreshToken", refreshToken)
+    localStorage.setItem("refreshToken", refreshToken);
   }
 
   errorHandler(errors) {
-    const err = {}
+    const err = {};
     errors.forEach(({ path, message }) => {
-      err[`${path}Error`] = message
+      err[`${path}Error`] = message;
     });
 
-    this.setState(err)
+    this.setState(err);
   }
 
   render() {
-
     let msg = null;
 
     if (this.state.passwordError || this.state.emailError) {
-      const errorList = []
+      const errorList = [];
 
-      if (this.state.passwordError) errorList.push(this.state.passwordError)
-      if (this.state.emailError) errorList.push(this.state.emailError)
+      if (this.state.passwordError) errorList.push(this.state.passwordError);
+      if (this.state.emailError) errorList.push(this.state.emailError);
 
-      msg = <Message
-        error
-        header='There was some errors with your login'
-        list={errorList}
-      />
+      msg = (
+        <Message
+          error
+          header="There was some errors with your login"
+          list={errorList}
+        />
+      );
     }
 
     return (
@@ -98,7 +101,6 @@ class Login extends Component {
 
           {msg}
           <Button onClick={this.onSubmit}>Submit</Button>
-
         </Form>
       </Container>
     );
@@ -118,8 +120,8 @@ const mapDispatchToPros = dispatch => {
 };
 
 const loginMutation = gql`
-  mutation($email:String!, $password:String!){
-    login(email:$email, password:$password) {
+  mutation($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
       ok
       token
       refreshToken
@@ -129,6 +131,8 @@ const loginMutation = gql`
       }
     }
   }
-`
+`;
 
-export default connect(mapStateToProps, mapDispatchToPros)(graphql(loginMutation)(Login));
+export default connect(mapStateToProps, mapDispatchToPros)(
+  graphql(loginMutation)(Login)
+);

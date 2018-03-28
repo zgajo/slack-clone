@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
+
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
 
@@ -13,7 +14,17 @@ import configureStore from "./shared/store/configStore"; //Initialize our store.
 const store = configureStore();
 
 const client = new ApolloClient({
-  uri: "http://localhost:4000/graphql"
+  uri: "http://localhost:4000/graphql",
+  request: async operation => {
+    const token = await localStorage.getItem("token");
+    const refreshToken = await localStorage.getItem("refreshToken");
+    operation.setContext({
+      headers: {
+        "x-token": token,
+        "x-refresh-token": refreshToken
+      }
+    });
+  }
 });
 
 ReactDOM.render(
