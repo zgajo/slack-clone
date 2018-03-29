@@ -24,11 +24,6 @@ const app = express();
 
 const readToken = async (req, res, next) => {
   const token = await req.headers["x-token"];
-  console.log("*******************************");
-
-  console.log(token);
-  console.log("*******************************");
-
   if (token) {
     try {
       const { user } = await jwt.verify(token, SECRET);

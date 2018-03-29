@@ -1,15 +1,16 @@
 import React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
-import decode from 'jwt-decode';
+import decode from "jwt-decode";
 
 import Home from "./Home";
 import Register from "./containers/Register";
 import Login from "./containers/Login";
 import CreateTeam from "./containers/CreateTeam";
+import ViewTeam from "./containers/ViewTeam";
 
 const isAuthenticated = () => {
-  const token = localStorage.getItem('token');
-  const refreshToken = localStorage.getItem('refreshToken');
+  const token = localStorage.getItem("token");
+  const refreshToken = localStorage.getItem("refreshToken");
   try {
     decode(token);
     decode(refreshToken);
@@ -24,21 +25,23 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
     render={props =>
-      (isAuthenticated() ? (
+      isAuthenticated() ? (
         <Component {...props} />
       ) : (
-          <Redirect
-            to={{
-              pathname: '/login',
-            }}
-          />
-        ))}
+        <Redirect
+          to={{
+            pathname: "/login"
+          }}
+        />
+      )
+    }
   />
 );
 
 export default () => (
   <Switch>
     <PrivateRoute path="/create_team" component={CreateTeam} />;
+    <Route path="/view_team" component={ViewTeam} />;
     <Route path="/register" component={Register} />;
     <Route path="/login" component={Login} />;
     <Route path="/" component={Home} />;

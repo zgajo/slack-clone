@@ -36,10 +36,10 @@ export const refreshTokens = async (
 ) => {
   let userId = 0;
   /**
- * We can't trust the token. Later down in that method, I verify the token. 
- * I decoded it first to get the userId so I could get the password so I could verify the token (because the password was used in the secret for the token).
- * If you don't use the user's password to sign the token, you can just verify the token
- */
+   * We can't trust the token. Later down in that method, I verify the token.
+   * I decoded it first to get the userId so I could get the password so I could verify the token (because the password was used in the secret for the token).
+   * If you don't use the user's password to sign the token, you can just verify the token
+   */
   try {
     const { user: { id } } = jwt.decode(refreshToken);
     userId = id;
