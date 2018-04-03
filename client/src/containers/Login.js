@@ -99,9 +99,10 @@ class Login extends Component {
             />
           </Form.Field>
 
-          {msg}
           <Button onClick={this.onSubmit}>Submit</Button>
         </Form>
+
+        {msg}
       </Container>
     );
   }

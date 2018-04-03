@@ -38,10 +38,10 @@ class CreateTeam extends Component {
       nameError: ""
     });
 
-    const { ok, errors } = response.data.createTeam;
+    const { ok, errors, team } = response.data.createTeam;
 
     if (ok) {
-      this.props.history.push("/");
+      this.props.history.push(`/view_team/${team.id}`);
     } else {
       this.errorHandler(errors);
     }
@@ -99,6 +99,9 @@ const createTeamMutation = gql`
   mutation($name: String!) {
     createTeam(name: $name) {
       ok
+      team {
+        id
+      }
       errors {
         path
         message
