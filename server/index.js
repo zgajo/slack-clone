@@ -74,7 +74,7 @@ app.use(
 // GraphiQL, a visual editor for queries
 app.use("/graphiql", graphiqlExpress({ endpointURL: "/graphql" }));
 
-models.sequelize.sync().then(() => {
+models.sequelize.sync({ force: false }).then(() => {
   // Start the server
 
   app.listen(4000, () => {

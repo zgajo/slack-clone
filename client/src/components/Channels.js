@@ -63,7 +63,8 @@ export default ({
   channels,
   users,
   onAddChannelClick,
-  teamId
+  teamId,
+  onInvitePeopleClick
 }) => (
   <ChannelWrapper>
     <PushLeft>
@@ -83,6 +84,9 @@ export default ({
         <SideBarListHeader>Direct Messages</SideBarListHeader>
         {users.map(user)}
       </SideBarList>
+    </div>
+    <div href="#invite-people" onClick={onInvitePeopleClick}>
+      + Invite People
     </div>
   </ChannelWrapper>
 );
