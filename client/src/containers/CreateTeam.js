@@ -53,17 +53,16 @@ class CreateTeam extends Component {
       err[`${path}Error`] = message;
     });
 
-    this.setState({ nameError: err });
+    this.setState(err);
   }
 
   render() {
     let msg = null;
 
+    const errorList = [];
+
     if (this.state.nameError) {
-      const errorList = [];
-
       errorList.push(this.state.nameError);
-
       msg = (
         <Message
           error
@@ -87,9 +86,9 @@ class CreateTeam extends Component {
             />
           </Form.Field>
 
-          {msg}
           <Button onClick={this.onSubmit}>Submit</Button>
         </Form>
+        {msg}
       </Container>
     );
   }

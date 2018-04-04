@@ -9,6 +9,7 @@ import SendMessage from "../components/SendMessage";
 import Sidebar from "./Sidebar";
 
 import { allTeamsQuery } from "../graphql/team";
+import { Redirect } from "react-router-dom";
 
 const ViewTeam = ({
   data: { loading, allTeams },
@@ -16,13 +17,21 @@ const ViewTeam = ({
 }) => {
   if (loading) return null;
 
-  const teamIdx = !!teamId
-    ? findIndex(allTeams, ["id", parseInt(teamId, 10)])
+  if (!allTeams.length) {
+    return <Redirect to="/create_team" />;
+  }
+
+  let teamIdInteger = parseInt(teamId, 10);
+
+  const teamIdx = teamIdInteger
+    ? findIndex(allTeams, ["id", teamIdInteger])
     : 0;
   const team = allTeams[teamIdx];
 
-  const channelIdx = !!channelId
-    ? findIndex(team.channels, ["id", parseInt(channelId, 10)])
+  let channelIdInteger = parseInt(channelId, 10);
+
+  const channelIdx = channelIdInteger
+    ? findIndex(team.channels, ["id", channelIdInteger])
     : 0;
 
   const currentChannel = team.channels[channelIdx];
@@ -36,14 +45,16 @@ const ViewTeam = ({
         }))}
         team={team}
       />
-      <Header channelName={currentChannel.name} />
-      <Messages channel={currentChannel.id}>
-        <ul className="message-list">
-          <li />
-          <li />
-        </ul>
-      </Messages>
-      <SendMessage channelName={currentChannel.name} />
+      {currentChannel && <Header channelName={currentChannel.name} />}
+      {currentChannel && (
+        <Messages channel={currentChannel.id}>
+          <ul className="message-list">
+            <li />
+            <li />
+          </ul>
+        </Messages>
+      )}
+      {currentChannel && <SendMessage channelName={currentChannel.name} />}
     </AppLayout>
   );
 };

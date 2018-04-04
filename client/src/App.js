@@ -41,7 +41,11 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
 export default () => (
   <Switch>
     <PrivateRoute path="/create_team" exact component={CreateTeam} />;
-    <Route path="/view_team/:teamId?/:channelId?" exact component={ViewTeam} />;
+    <PrivateRoute
+      path="/view_team/:teamId?/:channelId?"
+      exact
+      component={ViewTeam}
+    />;
     <Route path="/register" exact component={Register} />;
     <Route path="/login" exact component={Login} />;
     <Route path="/" exact component={Home} />;
