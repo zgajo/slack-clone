@@ -12,21 +12,21 @@ import { allTeamsQuery } from "../graphql/team";
 import { Redirect } from "react-router-dom";
 
 const ViewTeam = ({
-  data: { loading, allTeams },
+  data: { loading, allTeams, inviteTeams },
   match: { params: { teamId, channelId } }
 }) => {
   if (loading) return null;
 
-  if (!allTeams.length) {
+  const teams = [...allTeams, ...inviteTeams];
+
+  if (!teams.length) {
     return <Redirect to="/create_team" />;
   }
 
   let teamIdInteger = parseInt(teamId, 10);
 
-  const teamIdx = teamIdInteger
-    ? findIndex(allTeams, ["id", teamIdInteger])
-    : 0;
-  const team = allTeams[teamIdx];
+  const teamIdx = teamIdInteger ? findIndex(teams, ["id", teamIdInteger]) : 0;
+  const team = teamIdx === -1 ? teams[0] : teams[teamIdx];
 
   let channelIdInteger = parseInt(channelId, 10);
 
@@ -34,7 +34,8 @@ const ViewTeam = ({
     ? findIndex(team.channels, ["id", channelIdInteger])
     : 0;
 
-  const currentChannel = team.channels[channelIdx];
+  const currentChannel =
+    channelIdx === -1 ? team.channels[0] : team.channels[channelIdx];
 
   return (
     <AppLayout>
