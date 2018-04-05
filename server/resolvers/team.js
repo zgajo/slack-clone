@@ -8,21 +8,31 @@ export default {
     ),
     inviteTeams: requiresAuth.createResolver(
       async (parent, args, { models, user }) => {
-        const all = await models.Team.findAll(
+        return models.sequelize.query(
+          "SELECT * FROM teams JOIN members on id = team_id WHERE user_id = ?",
           {
-            include: [
-              {
-                model: models.User,
-                where: { id: user.id }
-              }
-            ]
-          },
-          { raw: true }
+            replacements: [user.id],
+            model: models.Team
+          }
         );
-        console.log("all", all);
-        return all;
       }
     )
+
+    //     const all = await models.Team.findAll(
+    //       {
+    //         include: [
+    //           {
+    //             model: models.User,
+    //             where: { id: user.id }
+    //           }
+    //         ]
+    //       },
+    //       { raw: true }
+    //     );
+    //     console.log("all", all);
+    //     return all;
+    //   }
+    // )
   },
   Mutation: {
     createTeam: requiresAuth.createResolver(
