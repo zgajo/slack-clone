@@ -40,7 +40,7 @@ const ViewTeam = ({
   return (
     <AppLayout>
       <Sidebar
-        teams={allTeams.map(t => ({
+        teams={teams.map(t => ({
           id: t.id,
           letter: t.name.charAt(0).toUpperCase()
         }))}
