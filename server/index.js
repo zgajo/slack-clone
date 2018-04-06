@@ -78,6 +78,6 @@ models.sequelize.sync({ force: false }).then(() => {
   // Start the server
 
   app.listen(4001, () => {
-    console.log("Go to http://localhost:4000/graphiql to run queries!");
+    console.log("Go to http://localhost:4001/graphiql to run queries!");
   });
 });

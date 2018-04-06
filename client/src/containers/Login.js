@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { graphql } from "react-apollo";
+import { graphql, compose } from "react-apollo";
 import gql from "graphql-tag";
 import {
   Header,
@@ -10,8 +10,6 @@ import {
   Message,
   Form
 } from "semantic-ui-react";
-
-import { changeEmail, changePassword } from "../shared/actions/userActions";
 
 class Login extends Component {
   constructor(props) {
@@ -24,13 +22,14 @@ class Login extends Component {
   }
 
   onSubmit = async () => {
+    const { User } = this.props.localUserQuery;
     this.setState({
       passwordError: "",
       emailError: ""
     });
 
     const response = await this.props.mutate({
-      variables: { ...this.props.user }
+      variables: { ...User }
     });
 
     const { ok, token, refreshToken, errors } = response.data.login;
@@ -55,6 +54,20 @@ class Login extends Component {
 
     this.setState(err);
   }
+
+  onEmailChange = async email => {
+    const { updateEmail } = this.props;
+    updateEmail({
+      variables: { email }
+    });
+  };
+
+  onPasswordChange = async password => {
+    const { updatePassword } = this.props;
+    updatePassword({
+      variables: { password }
+    });
+  };
 
   render() {
     let msg = null;
@@ -81,7 +94,7 @@ class Login extends Component {
           <Form.Field>
             <Input
               name="email"
-              onChange={e => this.props.onEmailChange(e.target.value)}
+              onChange={e => this.onEmailChange(e.target.value)}
               placeholder="Email"
               fluid
               type="email"
@@ -91,7 +104,7 @@ class Login extends Component {
           <Form.Field>
             <Input
               name="password"
-              onChange={e => this.props.onPasswordChange(e.target.value)}
+              onChange={e => this.onPasswordChange(e.target.value)}
               placeholder="Password"
               fluid
               type="password"
@@ -108,18 +121,6 @@ class Login extends Component {
   }
 }
 
-// Subscribe component to redux store and merge the state into component's props
-const mapStateToProps = state => ({
-  user: state.user
-});
-
-const mapDispatchToPros = dispatch => {
-  return {
-    onEmailChange: email => dispatch(changeEmail(email)),
-    onPasswordChange: password => dispatch(changePassword(password))
-  };
-};
-
 const loginMutation = gql`
   mutation($email: String!, $password: String!) {
     login(email: $email, password: $password) {
@@ -134,6 +135,29 @@ const loginMutation = gql`
   }
 `;
 
-export default connect(mapStateToProps, mapDispatchToPros)(
-  graphql(loginMutation)(Login)
-);
+const localUserQuery = gql`
+  query localUserQuery {
+    User @client {
+      email
+      password
+    }
+  }
+`;
+
+const updateEmail = gql`
+  mutation($email: String) {
+    updateEmail(email: $email) @client
+  }
+`;
+const updatePassword = gql`
+  mutation($password: String) {
+    updatePassword(password: $password) @client
+  }
+`;
+
+export default compose(
+  graphql(localUserQuery, { name: "localUserQuery" }),
+  graphql(updateEmail, { name: "updateEmail" }),
+  graphql(updatePassword, { name: "updatePassword" }),
+  graphql(loginMutation)
+)(Login);
