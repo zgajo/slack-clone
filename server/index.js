@@ -77,7 +77,7 @@ app.use("/graphiql", graphiqlExpress({ endpointURL: "/graphql" }));
 models.sequelize.sync({ force: false }).then(() => {
   // Start the server
 
-  app.listen(4000, () => {
+  app.listen(4001, () => {
     console.log("Go to http://localhost:4000/graphiql to run queries!");
   });
 });

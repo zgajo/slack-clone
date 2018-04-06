@@ -16,7 +16,7 @@ import registerServiceWorker from "./registerServiceWorker";
 import configureStore from "./shared/store/configStore"; //Initialize our store.
 const store = configureStore();
 
-const httpLink = new HttpLink({ uri: "http://localhost:4000/graphql" });
+const httpLink = new HttpLink({ uri: "http://localhost:4001/graphql" });
 
 const getTokenMiddleware = new ApolloLink((operation, forward) => {
   operation.setContext(({ headers }) => ({

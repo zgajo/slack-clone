@@ -3,10 +3,10 @@ import { graphql } from "react-apollo";
 import findIndex from "lodash/findIndex";
 
 import Header from "../components/Header";
-import Messages from "../components/Messages";
 import AppLayout from "../components/AppLayout";
 import SendMessage from "../components/SendMessage";
 import Sidebar from "./Sidebar";
+import MessageContainer from "./MessageContainer";
 
 import { allTeamsQuery } from "../graphql/team";
 import { Redirect } from "react-router-dom";
@@ -47,15 +47,13 @@ const ViewTeam = ({
         team={team}
       />
       {currentChannel && <Header channelName={currentChannel.name} />}
+      {currentChannel && <MessageContainer channelId={currentChannel.id} />}
       {currentChannel && (
-        <Messages channel={currentChannel.id}>
-          <ul className="message-list">
-            <li />
-            <li />
-          </ul>
-        </Messages>
+        <SendMessage
+          channelName={currentChannel.name}
+          channelId={currentChannel.id}
+        />
       )}
-      {currentChannel && <SendMessage channelName={currentChannel.name} />}
     </AppLayout>
   );
 };
