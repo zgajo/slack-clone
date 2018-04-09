@@ -28,7 +28,9 @@ const sendMessage = ({
       onBlur={handleBlur}
       name="message"
       onKeyDown={e => {
-        if (e.keyKode === 13 && !isSubmitting) {
+        console.log(e.keyCode);
+        if (e.keyCode === 13 && !isSubmitting) {
+          console.log("enter");
           handleSubmit(e);
         }
       }}
@@ -52,6 +54,7 @@ export default compose(
       values,
       { props: { channelId, mutate }, setSubmitting, resetForm }
     ) => {
+      console.log("hello");
       if (!values.message || !values.message.trim()) {
         setSubmitting(false);
         return;
