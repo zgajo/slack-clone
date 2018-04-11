@@ -1,11 +1,17 @@
 import express from "express";
 import bodyParser from "body-parser";
+import cors from "cors";
+import path from "path";
+import { createServer } from "http";
 import jwt from "jsonwebtoken";
+
 import { graphqlExpress, graphiqlExpress } from "apollo-server-express";
 import { makeExecutableSchema } from "graphql-tools";
-import path from "path";
 import { fileLoader, mergeTypes, mergeResolvers } from "merge-graphql-schemas";
-import cors from "cors";
+import { execute, subscribe } from "graphql";
+import { PubSub } from "graphql-subscriptions";
+import { SubscriptionServer } from "subscriptions-transport-ws";
+
 import models from "./models";
 
 import { refreshTokens } from "./auth";
@@ -74,10 +80,16 @@ app.use(
 // GraphiQL, a visual editor for queries
 app.use("/graphiql", graphiqlExpress({ endpointURL: "/graphql" }));
 
+const server = createServer(app);
+
 models.sequelize.sync({ force: false }).then(() => {
   // Start the server
 
-  app.listen(4001, () => {
+  server.listen(4001, () => {
+    new SubscriptionServer(
+      { execute, subscribe, schema },
+      { server, path: "/subscriptions" }
+    );
     console.log("Go to http://localhost:4001/graphiql to run queries!");
   });
 });
