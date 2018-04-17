@@ -21,7 +21,7 @@ const newChannelMessageSubscription = gql`
 
 class MessageContainer extends React.Component {
   componentWillMount() {
-    this.props.data.subscribeToMore({
+    this.unsubscribe = this.props.data.subscribeToMore({
       document: newChannelMessageSubscription,
       variables: {
         channelId: this.props.channelId
@@ -39,8 +39,61 @@ class MessageContainer extends React.Component {
     });
   }
 
+  componentWillReceiveProps({ channelId }) {
+    if (this.props.channelId !== channelId) {
+      if (this.unsubscribe) {
+        this.unsubscribe();
+      }
+      this.unsubscribe = this.props.data.subscribeToMore({
+        document: newChannelMessageSubscription,
+        variables: {
+          channelId: channelId
+        },
+        updateQuery: (prev, { subscriptionData }) => {
+          if (!subscriptionData) {
+            return prev;
+          }
+
+          return {
+            ...prev,
+            messages: [
+              ...prev.messages,
+              subscriptionData.data.newChannelMessage
+            ]
+          };
+        }
+      });
+    }
+  }
+  subscribe = channelId => {
+    this.unsubscribe = this.props.data.subscribeToMore({
+      document: newChannelMessageSubscription,
+      variables: {
+        channelId: this.props.channelId
+      },
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData) {
+          return prev;
+        }
+
+        return {
+          ...prev,
+          messages: [...prev.messages, subscriptionData.data.newChannelMessage]
+        };
+      }
+    });
+  };
+
+  componentWillUnmount() {
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
+  }
+
   render() {
-    const { data: { loading, messages } } = this.props;
+    const {
+      data: { loading, messages }
+    } = this.props;
     return loading ? null : (
       <Messages>
         <Comment.Group>
@@ -79,5 +132,9 @@ const messagesQuery = gql`
 export default graphql(messagesQuery, {
   variables: props => ({
     channelId: props.channelId
-  })
+  }),
+  options: {
+    // Not reading from local cache, it reads from server every time
+    fetchPolicy: "network-only"
+  }
 })(MessageContainer);
