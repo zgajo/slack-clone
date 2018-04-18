@@ -78,7 +78,13 @@ app.use(
 );
 
 // GraphiQL, a visual editor for queries
-app.use("/graphiql", graphiqlExpress({ endpointURL: "/graphql" }));
+app.use(
+  "/graphiql",
+  graphiqlExpress({
+    endpointURL: "/graphql",
+    subscriptionsEndpoint: "ws://localhost:4001/subscriptions"
+  })
+);
 
 const server = createServer(app);
 
@@ -87,7 +93,37 @@ models.sequelize.sync({ force: false }).then(() => {
 
   server.listen(4001, () => {
     new SubscriptionServer(
-      { execute, subscribe, schema },
+      {
+        execute,
+        subscribe,
+        schema,
+        onConnect: async ({ token, refreshToken }, webSocket) => {
+          console.log("connectionParams", connectionParams);
+
+          if (token && refreshToken) {
+            console.log("HELLO");
+
+            let user = null;
+            try {
+              const payload = await jwt.verify(token, SECRET);
+              user = payload.user;
+            } catch (error) {
+              const newTokens = await refreshTokens(
+                token,
+                refreshToken,
+                models,
+                SECRET,
+                SECRET2
+              );
+              user = newTokens.user;
+            }
+            if (!user) throw new Error("Invalid auth tokens");
+            return true;
+          }
+
+          throw new Error("Missing auth tokens");
+        }
+      },
       { server, path: "/subscriptions" }
     );
     console.log("Go to http://localhost:4001/graphiql to run queries!");
