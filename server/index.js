@@ -98,16 +98,12 @@ models.sequelize.sync({ force: false }).then(() => {
         subscribe,
         schema,
         onConnect: async ({ token, refreshToken }, webSocket) => {
-          console.log("connectionParams", connectionParams);
-
           if (token && refreshToken) {
-            console.log("HELLO");
-
             let user = null;
             try {
-              const payload = await jwt.verify(token, SECRET);
+              const payload = jwt.verify(token, SECRET);
               user = payload.user;
-            } catch (error) {
+            } catch (err) {
               const newTokens = await refreshTokens(
                 token,
                 refreshToken,
@@ -117,14 +113,28 @@ models.sequelize.sync({ force: false }).then(() => {
               );
               user = newTokens.user;
             }
-            if (!user) throw new Error("Invalid auth tokens");
+            if (!user) {
+              throw new Error("Invalid auth tokens");
+            }
+
+            // const member = await models.Member.findOne({
+            //   where: { teamId: 1, userId: user.id }
+            // });
+
+            // if (!member) {
+            //   throw new Error("Missing auth tokens!");
+            // }
+
             return true;
           }
 
-          throw new Error("Missing auth tokens");
+          throw new Error("Missing auth tokens!");
         }
       },
-      { server, path: "/subscriptions" }
+      {
+        server,
+        path: "/subscriptions"
+      }
     );
     console.log("Go to http://localhost:4001/graphiql to run queries!");
   });
