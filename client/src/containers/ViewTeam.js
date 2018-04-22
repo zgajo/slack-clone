@@ -8,16 +8,18 @@ import SendMessage from "../components/SendMessage";
 import Sidebar from "./Sidebar";
 import MessageContainer from "./MessageContainer";
 
-import { allTeamsQuery } from "../graphql/team";
+import { meQuery } from "../graphql/team";
 import { Redirect } from "react-router-dom";
 
 const ViewTeam = ({
-  data: { loading, allTeams, inviteTeams },
-  match: { params: { teamId, channelId } }
+  data: { loading, me },
+  match: {
+    params: { teamId, channelId }
+  }
 }) => {
   if (loading) return null;
 
-  const teams = [...allTeams, ...inviteTeams];
+  const { teams } = me;
 
   if (!teams.length) {
     return <Redirect to="/create_team" />;
@@ -58,4 +60,8 @@ const ViewTeam = ({
   );
 };
 
-export default graphql(allTeamsQuery)(ViewTeam);
+export default graphql(meQuery, {
+  options: {
+    fetchPolicy: "network-only"
+  }
+})(ViewTeam);

@@ -2,49 +2,22 @@ import formatErrors from "../formatErrors";
 import { requiresAuth } from "../permissions";
 
 export default {
-  Query: {
-    allTeams: requiresAuth.createResolver((parent, args, { models, user }) =>
-      models.Team.findAll({ where: { owner: user.id } }, { raw: true })
-    ),
-    inviteTeams: requiresAuth.createResolver(
-      async (parent, args, { models, user }) => {
-        return models.sequelize.query(
-          "SELECT * FROM teams JOIN members on id = team_id WHERE user_id = ?",
-          {
-            replacements: [user.id],
-            model: models.Team
-          }
-        );
-      }
-    )
-
-    //     const all = await models.Team.findAll(
-    //       {
-    //         include: [
-    //           {
-    //             model: models.User,
-    //             where: { id: user.id }
-    //           }
-    //         ]
-    //       },
-    //       { raw: true }
-    //     );
-    //     console.log("all", all);
-    //     return all;
-    //   }
-    // )
-  },
   Mutation: {
     createTeam: requiresAuth.createResolver(
       async (parent, args, { models, user }) => {
         try {
           //sequelize.transaction is used when we have multiple chained inserts
           const response = await models.sequelize.transaction(async () => {
-            const team = await models.Team.create({ ...args, owner: user.id });
+            const team = await models.Team.create({ ...args });
             await models.Channel.create({
               name: "general",
               public: true,
               teamId: team.id
+            });
+            await models.Member.create({
+              teamId: team.id,
+              userId: user.id,
+              admin: true
             });
             return team;
           });
