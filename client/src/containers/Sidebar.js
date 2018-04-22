@@ -31,17 +31,7 @@ class Sidebar extends Component {
   };
 
   render() {
-    const { teams, team } = this.props;
-
-    let username = "";
-    let isOwner = false;
-    try {
-      const token = localStorage.getItem("token");
-      const { user } = decode(token);
-      // eslint-disable-next-line prefer-destructuring
-      username = user.username;
-      isOwner = user.id === team.owner;
-    } catch (err) {}
+    const { teams, team, username } = this.props;
 
     return [
       <Teams key="team-sidebar" teams={teams} />,
@@ -50,7 +40,7 @@ class Sidebar extends Component {
         teamName={team.name}
         username={username}
         teamId={team.id}
-        isOwner={isOwner}
+        isOwner={team.admin}
         channels={team.channels}
         users={[{ id: 1, name: "slackbot" }, { id: 2, name: "user1" }]}
         onAddChannelClick={this.handleChannelClick}

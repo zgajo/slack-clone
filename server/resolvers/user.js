@@ -13,7 +13,8 @@ export default {
         "SELECT * FROM teams as team JOIN members as member ON team.id = member.team_id WHERE member.user_id = ?",
         {
           replacements: [user.id],
-          model: models.Team
+          model: models.Team,
+          raw: true
         }
       )
   },
