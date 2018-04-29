@@ -11,7 +11,7 @@ type Subscription {
 }
 
 type Query {
-  messages(channelId: Int!): [Message!]
+  messages(channelId: Int!): [Message!]!
 }
 
 type Mutation {

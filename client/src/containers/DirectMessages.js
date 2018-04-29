@@ -13,10 +13,9 @@ import { meQuery } from "../graphql/team";
 import { Redirect } from "react-router-dom";
 
 const ViewTeam = ({
-  mutate,
   data: { loading, me },
   match: {
-    params: { teamId, channelId }
+    params: { teamId, userId }
   }
 }) => {
   if (loading) return null;
@@ -32,15 +31,6 @@ const ViewTeam = ({
   const teamIdx = teamIdInteger ? findIndex(teams, ["id", teamIdInteger]) : 0;
   const team = teamIdx === -1 ? teams[0] : teams[teamIdx];
 
-  let channelIdInteger = parseInt(channelId, 10);
-
-  const channelIdx = channelIdInteger
-    ? findIndex(team.channels, ["id", channelIdInteger])
-    : 0;
-
-  const currentChannel =
-    channelIdx === -1 ? team.channels[0] : team.channels[channelIdx];
-
   return (
     <AppLayout>
       <Sidebar
@@ -51,19 +41,10 @@ const ViewTeam = ({
         team={team}
         username={username}
       />
-      {currentChannel && <Header channelName={currentChannel.name} />}
-      {currentChannel && <MessageContainer channelId={currentChannel.id} />}
-      {currentChannel && (
-        <SendMessage
-          onSubmit={async text => {
-            await mutate({
-              variables: { text, channelId, channelId: currentChannel.id }
-            });
-          }}
-          placeholder={currentChannel.name}
-          channelId={currentChannel.id}
-        />
-      )}
+      {/* <Header channelName={currentChannel.name} />
+      <MessageContainer channelId={currentChannel.id} /> */}
+
+      <SendMessage onSubmit={() => {}} placeholder={userId} />
     </AppLayout>
   );
 };

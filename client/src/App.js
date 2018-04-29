@@ -7,6 +7,7 @@ import Register from "./containers/Register";
 import Login from "./containers/Login";
 import CreateTeam from "./containers/CreateTeam";
 import ViewTeam from "./containers/ViewTeam";
+import DirectMessages from "./containers/DirectMessages";
 
 const isAuthenticated = () => {
   const token = localStorage.getItem("token");
@@ -45,6 +46,11 @@ export default () => (
       path="/view_team/:teamId?/:channelId?"
       exact
       component={ViewTeam}
+    />;
+    <PrivateRoute
+      path="/view_team/user/:teamId/:userId"
+      exact
+      component={DirectMessages}
     />;
     <Route path="/register" exact component={Register} />;
     <Route path="/login" exact component={Login} />;

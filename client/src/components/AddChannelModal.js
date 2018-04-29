@@ -79,7 +79,6 @@ export default compose(
           }
         },
         update: (store, { data: { createChannel } }) => {
-          console.log(data);
           const { ok, channel } = createChannel;
 
           if (!ok) {
