@@ -13,5 +13,5 @@ const allUsersQuery = gql`
     }
   }
 `;
-console.log("hello");
+
 export default graphql(allUsersQuery)(Home);

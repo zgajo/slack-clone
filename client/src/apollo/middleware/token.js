@@ -15,10 +15,14 @@ export const getTokenMiddleware = new ApolloLink((operation, forward) => {
 export const setTokenAfterware = new ApolloLink((operation, forward) => {
   return forward(operation).map(res => {
     const context = operation.getContext();
-    const { response: { headers } } = context;
+    const {
+      response: { headers }
+    } = context;
 
     const token = headers.get("x-token");
     const refreshToken = headers.get("x-refresh-token");
+
+    console.log(token);
 
     if (token) {
       localStorage.setItem("token", token);
