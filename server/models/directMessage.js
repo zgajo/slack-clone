@@ -9,10 +9,10 @@ export default (sequelize, DataTypes) => {
       foreignKey: { name: "teamId", field: "team_id" }
     });
     DirectMessage.belongsTo(models.User, {
-      foreignKey: { name: "receiver", field: "receiver_id" }
+      foreignKey: { name: "receiverId", field: "receiver_id" }
     });
     DirectMessage.belongsTo(models.User, {
-      foreignKey: { name: "sender", field: "sender_id" }
+      foreignKey: { name: "senderId", field: "sender_id" }
     });
   };
 
