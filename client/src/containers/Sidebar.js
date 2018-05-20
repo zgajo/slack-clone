@@ -5,13 +5,22 @@ import decode from "jwt-decode";
 import Channels from "../components/Channels";
 import Teams from "../components/Teams";
 import AddChannelModal from "../components/AddChannelModal";
+import DirectMessageModal from "../components/DirectMessageModal";
 import InvitePeopleModal from "../components/InvitePeopleModal";
 
 class Sidebar extends Component {
   state = {
     openAddChannelModal: false,
-
+    openDirectMessageModal: false,
     openInvitePeopleModal: false
+  };
+
+  toggleDirectMessage = () => {
+    this.setState(prevState => {
+      return {
+        openDirectMessageModal: !prevState.openDirectMessageModal
+      };
+    });
   };
 
   handleChannelClick = () => {
@@ -44,7 +53,14 @@ class Sidebar extends Component {
         channels={team.channels}
         users={[{ id: 1, name: "slackbot" }, { id: 2, name: "user1" }]}
         onAddChannelClick={this.handleChannelClick}
+        onDirectMessageClick={this.toggleDirectMessage}
         onInvitePeopleClick={this.handleInvitePeopleClick}
+      />,
+      <DirectMessageModal
+        teamId={team.id}
+        open={this.state.openDirectMessageModal}
+        onClose={this.toggleDirectMessage}
+        key="sidebar-direct-message-modal"
       />,
       <AddChannelModal
         teamId={team.id}
