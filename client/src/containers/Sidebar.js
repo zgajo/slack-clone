@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import { graphql } from "react-apollo";
-import decode from "jwt-decode";
 
 import Channels from "../components/Channels";
 import Teams from "../components/Teams";
@@ -51,7 +49,7 @@ class Sidebar extends Component {
         teamId={team.id}
         isOwner={team.admin}
         channels={team.channels}
-        users={[{ id: 1, name: "slackbot" }, { id: 2, name: "user1" }]}
+        users={team.directMessageMembers}
         onAddChannelClick={this.handleChannelClick}
         onDirectMessageClick={this.toggleDirectMessage}
         onInvitePeopleClick={this.handleInvitePeopleClick}

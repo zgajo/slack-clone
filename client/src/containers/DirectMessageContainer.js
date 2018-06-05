@@ -1,10 +1,11 @@
-import React, { Component } from "react";
+import React from "react";
 import { graphql } from "react-apollo";
 import gql from "graphql-tag";
 
 import { Comment } from "semantic-ui-react";
 
 import Messages from "../components/Messages";
+import withRouter from "react-router/withRouter";
 
 class DirectMessageContainer extends React.Component {
   //   componentWillMount() {
@@ -119,12 +120,14 @@ const directMessagesQuery = gql`
 `;
 
 export default graphql(directMessagesQuery, {
-  variables: props => ({
-    teamId: props.teamId,
-    userId: props.userId
-  }),
+  variables: props => {
+    return {
+      teamId: props.teamId,
+      userId: props.userId
+    };
+  },
   options: {
     // Not reading from local cache, it reads from server every time
     fetchPolicy: "network-only"
   }
-})(DirectMessageContainer);
+})(withRouter(DirectMessageContainer));

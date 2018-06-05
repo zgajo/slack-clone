@@ -12,7 +12,7 @@ import DirectMessageContainer from "./DirectMessageContainer";
 import { meQuery } from "../graphql/team";
 import { Redirect } from "react-router-dom";
 
-const ViewTeam = ({
+const DirectMessages = ({
   mutate,
   data: { loading, me },
   match: {
@@ -43,7 +43,9 @@ const ViewTeam = ({
         username={username}
       />
       <Header channelName={"Someones username"} />
-      <DirectMessageContainer userId={userId} teamId={teamId} />
+      {userId && teamId ? (
+        <DirectMessageContainer userId={userId} teamId={teamId} />
+      ) : null}
 
       <SendMessage
         onSubmit={async text => {
@@ -63,12 +65,6 @@ const ViewTeam = ({
   );
 };
 
-const createMessageMutation = gql`
-  mutation($channelId: Int!, $text: String!) {
-    createMessage(channelId: $channelId, text: $text)
-  }
-`;
-
 const createDirectMessage = gql`
   mutation($receiverId: Int!, $text: String!, $teamId: Int!) {
     createDirectMessage(receiverId: $receiverId, text: $text, teamId: $teamId)
@@ -76,11 +72,10 @@ const createDirectMessage = gql`
 `;
 
 export default compose(
-  // graphql(createMessageMutation),
   graphql(createDirectMessage),
   graphql(meQuery, {
     options: {
       fetchPolicy: "network-only"
     }
   })
-)(ViewTeam);
+)(DirectMessages);

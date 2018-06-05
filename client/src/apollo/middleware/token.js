@@ -22,8 +22,6 @@ export const setTokenAfterware = new ApolloLink((operation, forward) => {
     const token = headers.get("x-token");
     const refreshToken = headers.get("x-refresh-token");
 
-    console.log(token);
-
     if (token) {
       localStorage.setItem("token", token);
     }

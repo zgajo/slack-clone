@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
 import { graphql } from "react-apollo";
 import gql from "graphql-tag";
 import {
@@ -10,8 +9,6 @@ import {
   Message,
   Form
 } from "semantic-ui-react";
-
-import { changeEmail, changePassword } from "../shared/actions/userActions";
 
 class CreateTeam extends Component {
   constructor(props) {
