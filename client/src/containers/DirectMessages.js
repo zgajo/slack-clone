@@ -14,7 +14,7 @@ import { Redirect } from "react-router-dom";
 
 const DirectMessages = ({
   mutate,
-  data: { loading, me },
+  data: { loading, me, getUser },
   match: {
     params: { teamId, userId }
   }
@@ -42,9 +42,9 @@ const DirectMessages = ({
         team={team}
         username={username}
       />
-      <Header channelName={"Someones username"} />
+      <Header channelName={getUser.username} />
       {userId && teamId ? (
-        <DirectMessageContainer userId={userId} teamId={teamId} />
+        <DirectMessageContainer userId={userId} teamId={team.id} />
       ) : null}
 
       <SendMessage
@@ -54,6 +54,27 @@ const DirectMessages = ({
               text,
               receiverId: userId,
               teamId
+            },
+            optimisticResponse: true,
+            update: store => {
+              const data = store.readQuery({ query: meQuery });
+
+              const teamIdx2 = findIndex(data.me.teams, ["id", team.id]);
+
+              const notAlreadyThere = data.me.teams[
+                teamIdx2
+              ].directMessageMembers.every(
+                member => member.id !== parseInt(userId, 10)
+              );
+
+              if (notAlreadyThere) {
+                data.me.teams[teamIdx2].directMessageMembers.push({
+                  __typename: "User",
+                  id: userId,
+                  username: getUser.username
+                });
+                store.writeQuery({ query: meQuery, data });
+              }
             }
           });
 
@@ -71,11 +92,39 @@ const createDirectMessage = gql`
   }
 `;
 
+const directMessageMeQuery = gql`
+  query($userId: Int) {
+    getUser(userId: $userId) {
+      id
+      username
+    }
+
+    me {
+      id
+      username
+      teams {
+        id
+        name
+        admin
+        directMessageMembers {
+          id
+          username
+        }
+        channels {
+          id
+          name
+        }
+      }
+    }
+  }
+`;
+
 export default compose(
   graphql(createDirectMessage),
-  graphql(meQuery, {
-    options: {
+  graphql(directMessageMeQuery, {
+    options: props => ({
+      variables: { userId: props.match.params.userId },
       fetchPolicy: "network-only"
-    }
+    })
   })
 )(DirectMessages);
