@@ -6,7 +6,7 @@ export const createTokens = async (user, secret, secret2) => {
   // {user:{id:2}}
   const createToken = jwt.sign(
     {
-      user: _.pick(user, ["id"])
+      user: _.pick(user, ["id", "username"])
     },
     secret,
     {
@@ -16,7 +16,7 @@ export const createTokens = async (user, secret, secret2) => {
 
   const createRefreshToken = jwt.sign(
     {
-      user: _.pick(user, ["id"])
+      user: _.pick(user, ["id", "username"])
     },
     secret2,
     {
@@ -41,7 +41,9 @@ export const refreshTokens = async (
    * If you don't use the user's password to sign the token, you can just verify the token
    */
   try {
-    const { user: { id } } = jwt.decode(refreshToken);
+    const {
+      user: { id }
+    } = jwt.decode(refreshToken);
     userId = id;
   } catch (err) {
     return {};

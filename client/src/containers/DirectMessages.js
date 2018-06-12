@@ -55,7 +55,9 @@ const DirectMessages = ({
               receiverId: userId,
               teamId
             },
-            optimisticResponse: true,
+            optimisticResponse: {
+              createDirectMessage: true
+            },
             update: store => {
               const data = store.readQuery({ query: meQuery });
 

@@ -148,6 +148,7 @@ const updateEmail = gql`
     updateEmail(email: $email) @client
   }
 `;
+
 const updatePassword = gql`
   mutation($password: String) {
     updatePassword(password: $password) @client
