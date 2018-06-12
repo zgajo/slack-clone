@@ -8,6 +8,7 @@ type User {
 type Query {
   me: User! #returns user after insert
   allUsers: [User!]! #returns user after insert
+  getUser(userId: Int): User
 }
 
 type Mutation {
