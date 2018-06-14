@@ -1,12 +1,17 @@
 import Sequelize from "sequelize";
 
-const sequelize = new Sequelize("slack", "dpranjic", "1111", {
-  dialect: "postgres",
-  operatorsAliases: Sequelize.Op, // to ger rid of Sequelize depricate error message
-  define: {
-    underscored: true
+const sequelize = new Sequelize(
+  process.env.TEST_DB || "slack",
+  "dpranjic",
+  "1111",
+  {
+    dialect: "postgres",
+    operatorsAliases: Sequelize.Op, // to ger rid of Sequelize depricate error message
+    define: {
+      underscored: true
+    }
   }
-});
+);
 
 const models = {
   User: sequelize.import("./user"),

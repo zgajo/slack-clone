@@ -113,14 +113,6 @@ models.sequelize.sync({ force: false }).then(() => {
               );
               return { models, user: newTokens.user };
             }
-
-            // const member = await models.Member.findOne({
-            //   where: { teamId: 1, userId: user.id }
-            // });
-
-            // if (!member) {
-            //   throw new Error("Missing auth tokens!");
-            // }
           }
 
           return { models };

@@ -12,6 +12,14 @@
         </ul>
     </li>
     <li>
+        <h5>Backend test</h5>
+        <ul>
+            <li>Jest</li>
+            <li>Babel-jest (for async await in test)</li>
+            <li>Axios - for requests to server</li>
+        </ul>
+    </li>
+    <li>
         <h5>Frontend</h5>
         <ul>
             <li>React</li>
