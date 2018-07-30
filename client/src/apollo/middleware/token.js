@@ -1,4 +1,5 @@
 import { ApolloLink } from "apollo-link";
+import { wsLink } from "../apollo";
 
 export const getTokenMiddleware = new ApolloLink((operation, forward) => {
   operation.setContext(({ headers }) => ({
@@ -24,6 +25,7 @@ export const setTokenAfterware = new ApolloLink((operation, forward) => {
 
     if (token) {
       localStorage.setItem("token", token);
+      wsLink.subscriptionClient.tryReconnect();
     }
     if (refreshToken) {
       localStorage.setItem("refreshToken", refreshToken);

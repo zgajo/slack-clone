@@ -10,14 +10,17 @@ import gql from "graphql-tag";
 import { getTokenMiddleware, setTokenAfterware } from "./middleware/token";
 
 // Create a WebSocket link:
-const wsLink = new WebSocketLink({
+export const wsLink = new WebSocketLink({
   uri: `ws://localhost:4001/subscriptions`,
   options: {
     reconnect: true,
-    connectionParams: {
-      token: localStorage.getItem("token"),
+    lazy: true,
+    connectionParams: () => ({
+      token:
+        console.log("ws connect", localStorage.getItem("token")) ||
+        localStorage.getItem("token"),
       refreshToken: localStorage.getItem("refreshToken")
-    }
+    })
   }
 });
 

@@ -9,6 +9,7 @@ import {
   Message,
   Form
 } from "semantic-ui-react";
+import { wsLink } from "../apollo/apollo";
 
 class Login extends Component {
   constructor(props) {
@@ -35,7 +36,8 @@ class Login extends Component {
 
     if (ok) {
       this.storeTokens(token, refreshToken);
-      this.props.history.push("/view_ team");
+      wsLink.subscriptionClient.tryReconnect();
+      this.props.history.push("/view_team");
     } else {
       this.errorHandler(errors);
     }
