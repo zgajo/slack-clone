@@ -35,6 +35,7 @@ class Login extends Component {
 
     if (ok) {
       this.storeTokens(token, refreshToken);
+      this.props.history.push("/view_ team");
     } else {
       this.errorHandler(errors);
     }

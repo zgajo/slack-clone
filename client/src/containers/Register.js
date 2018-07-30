@@ -41,7 +41,7 @@ class Register extends Component {
     const { ok, errors } = response.data.register;
 
     if (ok) {
-      this.props.history.push("/");
+      this.props.history.push("/login");
     } else {
       this.errorHandler(errors);
     }

@@ -16,9 +16,17 @@ const ModalModalExample = ({
   handleChange,
   handleBlur,
   handleSubmit,
-  isSubmitting
+  isSubmitting,
+  resetForm
 }) => (
-  <Modal open={open} onClose={onClose} style={{ display: "inline !important" }}>
+  <Modal
+    open={open}
+    onClose={e => {
+      resetForm();
+      onClose(e);
+    }}
+    style={{ display: "inline !important" }}
+  >
     <Modal.Header>Add Channel</Modal.Header>
     <Modal.Content>
       <Form>
@@ -33,7 +41,14 @@ const ModalModalExample = ({
           />
         </Form.Field>
         <Form.Group widths="equal">
-          <Button disabled={isSubmitting} fluid onClick={onClose}>
+          <Button
+            disabled={isSubmitting}
+            fluid
+            onClick={e => {
+              resetForm();
+              onClose(e);
+            }}
+          >
             Cancel
           </Button>
           <Button disabled={isSubmitting} onClick={handleSubmit} fluid>

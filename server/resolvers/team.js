@@ -21,20 +21,31 @@ export default {
       async (parent, args, { models, user }) => {
         try {
           //sequelize.transaction is used when we have multiple chained inserts
-          const response = await models.sequelize.transaction(async () => {
-            const team = await models.Team.create({ ...args });
-            await models.Channel.create({
-              name: "general",
-              public: true,
-              teamId: team.id
-            });
-            await models.Member.create({
-              teamId: team.id,
-              userId: user.id,
-              admin: true
-            });
-            return team;
-          });
+          const response = await models.sequelize.transaction(
+            async transaction => {
+              const team = await models.Team.create(
+                { ...args },
+                { transaction }
+              );
+              await models.Channel.create(
+                {
+                  name: "general",
+                  public: true,
+                  teamId: team.id
+                },
+                { transaction }
+              );
+              await models.Member.create(
+                {
+                  teamId: team.id,
+                  userId: user.id,
+                  admin: true
+                },
+                { transaction }
+              );
+              return team;
+            }
+          );
 
           return {
             ok: true,
