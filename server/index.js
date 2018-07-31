@@ -11,6 +11,7 @@ import { fileLoader, mergeTypes, mergeResolvers } from "merge-graphql-schemas";
 import { execute, subscribe } from "graphql";
 import { PubSub } from "graphql-subscriptions";
 import { SubscriptionServer } from "subscriptions-transport-ws";
+import formidable from "formidable";
 
 import models from "./models";
 
@@ -62,10 +63,48 @@ app.use(cors("*"));
 const SECRET = "sdfAsds:_:As!";
 const SECRET2 = "23213$%&$#$LKJdsš";
 
+const uploadDir = "files";
+
+const fileMiddleware = (req, res, next) => {
+  if (!req.is("multipart/form-data")) {
+    return next();
+  }
+
+  const form = formidable.IncomingForm({
+    uploadDir
+  });
+
+  form.parse(req, (error, { operations }, files) => {
+    if (error) {
+      console.log(error);
+    }
+
+    const document = JSON.parse(operations);
+
+    if (Object.keys(files).length) {
+      const {
+        file: { type, path: filePath }
+      } = files;
+      console.log(type);
+      console.log(filePath);
+      document.variables.file = {
+        type,
+        path: filePath
+      };
+    }
+
+    req.body = document;
+    next();
+  });
+};
+
+const graphqlEndpoint = "/graphql";
+
 // The GraphQL endpoint
 app.use(
-  "/graphql",
+  graphqlEndpoint,
   bodyParser.json(),
+  fileMiddleware,
   graphqlExpress(req => ({
     schema,
     context: {

@@ -1,13 +1,18 @@
 import React from "react";
 import styled from "styled-components";
-import { Input } from "semantic-ui-react";
+import { Input, Button, Icon } from "semantic-ui-react";
 import { withFormik } from "formik";
+
+import FileUpload from "./FileUpload";
 
 const SendMessageWrapper = styled.div`
   grid-column: 3;
-  grid-row: 3;
-  margin: 20px;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 3% auto;
 `;
+
+const ENTER_KEY = 13;
 
 const sendMessage = ({
   placeholder,
@@ -17,21 +22,24 @@ const sendMessage = ({
   handleChange,
   handleBlur,
   handleSubmit,
-  isSubmitting
+  isSubmitting,
+  channelId
 }) => (
   <SendMessageWrapper>
+    <FileUpload channelId={channelId}>
+      <Button icon>
+        <Icon name="plus" />
+      </Button>
+    </FileUpload>
     <Input
-      fluid
-      onChange={handleChange}
-      onBlur={handleBlur}
-      name="message"
       onKeyDown={e => {
-        console.log(e.keyCode);
-        if (e.keyCode === 13 && !isSubmitting) {
-          console.log("enter");
+        if (e.keyCode === ENTER_KEY && !isSubmitting) {
           handleSubmit(e);
         }
       }}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      name="message"
       value={values.message}
       placeholder={`Message #${placeholder}`}
     />

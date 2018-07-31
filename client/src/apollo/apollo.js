@@ -1,13 +1,15 @@
 import { ApolloClient } from "apollo-client";
-import { HttpLink } from "apollo-link-http";
 import { from, split } from "apollo-link";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { withClientState } from "apollo-link-state";
 import { WebSocketLink } from "apollo-link-ws";
 import { getMainDefinition } from "apollo-utilities";
 import gql from "graphql-tag";
+import createFileLink from "./createFileLink";
 
 import { getTokenMiddleware, setTokenAfterware } from "./middleware/token";
+
+const httpLink = createFileLink({ uri: "http://localhost:4001/graphql" });
 
 // Create a WebSocket link:
 export const wsLink = new WebSocketLink({
@@ -23,8 +25,6 @@ export const wsLink = new WebSocketLink({
     })
   }
 });
-
-const httpLink = new HttpLink({ uri: "http://localhost:4001/graphql" });
 
 const cache = new InMemoryCache();
 

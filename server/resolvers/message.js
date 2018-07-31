@@ -29,8 +29,13 @@ export default {
     createMessage: requiresAuth.createResolver(
       async (parent, args, { models, user }) => {
         try {
+          const messageData = args;
+          if (file) {
+            messageData.filetype = file.type;
+            messageData.url = file.path;
+          }
           const message = await models.Message.create({
-            ...args,
+            ...messageData,
             userId: user.id
           });
 

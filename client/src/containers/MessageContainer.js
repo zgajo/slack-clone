@@ -1,10 +1,10 @@
 import React from "react";
 import { graphql } from "react-apollo";
 import gql from "graphql-tag";
-
 import { Comment } from "semantic-ui-react";
 
 import Messages from "../components/Messages";
+import FileUpload from "../components/FileUpload";
 
 const newChannelMessageSubscription = gql`
   subscription($channelId: Int!) {
@@ -21,22 +21,7 @@ const newChannelMessageSubscription = gql`
 
 class MessageContainer extends React.Component {
   componentWillMount() {
-    this.unsubscribe = this.props.data.subscribeToMore({
-      document: newChannelMessageSubscription,
-      variables: {
-        channelId: this.props.channelId
-      },
-      updateQuery: (prev, { subscriptionData }) => {
-        if (!subscriptionData) {
-          return prev;
-        }
-
-        return {
-          ...prev,
-          messages: [...prev.messages, subscriptionData.data.newChannelMessage]
-        };
-      }
-    });
+    this.unsubscribe = this.subscribe(this.props.channelId);
   }
 
   componentWillReceiveProps({ channelId }) {
@@ -44,32 +29,21 @@ class MessageContainer extends React.Component {
       if (this.unsubscribe) {
         this.unsubscribe();
       }
-      this.unsubscribe = this.props.data.subscribeToMore({
-        document: newChannelMessageSubscription,
-        variables: {
-          channelId: channelId
-        },
-        updateQuery: (prev, { subscriptionData }) => {
-          if (!subscriptionData) {
-            return prev;
-          }
-
-          return {
-            ...prev,
-            messages: [
-              ...prev.messages,
-              subscriptionData.data.newChannelMessage
-            ]
-          };
-        }
-      });
+      this.unsubscribe = this.subscribe(channelId);
     }
   }
-  subscribe = channelId => {
-    this.unsubscribe = this.props.data.subscribeToMore({
+
+  componentWillUnmount() {
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
+  }
+
+  subscribe = channelId =>
+    this.props.data.subscribeToMore({
       document: newChannelMessageSubscription,
       variables: {
-        channelId: this.props.channelId
+        channelId
       },
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData) {
@@ -78,44 +52,41 @@ class MessageContainer extends React.Component {
 
         return {
           ...prev,
-          messages: [...prev.messages, subscriptionData.data.newChannelMessage]
+          messages: [...prev.messages, subscriptionData.newChannelMessage]
         };
       }
     });
-  };
-
-  componentWillUnmount() {
-    if (this.unsubscribe) {
-      this.unsubscribe();
-    }
-  }
 
   render() {
     const {
-      data: { loading, messages }
+      data: { loading, messages },
+      channelId
     } = this.props;
     return loading ? null : (
       <Messages>
-        <Comment.Group>
-          {messages.map(m => (
-            <Comment key={`${m.id}message`}>
-              <Comment.Content>
-                <Comment.Author as="a">{m.user.username}</Comment.Author>
-                <Comment.Metadata>
-                  <div>{m.created_at} </div>
-                </Comment.Metadata>
-                <Comment.Text>{m.text}</Comment.Text>
-                <Comment.Actions>
-                  <Comment.Action>Reply</Comment.Action>
-                </Comment.Actions>
-              </Comment.Content>
-            </Comment>
-          ))}
-        </Comment.Group>
+        <FileUpload channelId={channelId} disableClick>
+          <Comment.Group>
+            {messages.map(m => (
+              <Comment key={`${m.id}-message`}>
+                <Comment.Content>
+                  <Comment.Author as="a">{m.user.username}</Comment.Author>
+                  <Comment.Metadata>
+                    <div>{m.created_at}</div>
+                  </Comment.Metadata>
+                  <Comment.Text>{m.text}</Comment.Text>
+                  <Comment.Actions>
+                    <Comment.Action>Reply</Comment.Action>
+                  </Comment.Actions>
+                </Comment.Content>
+              </Comment>
+            ))}
+          </Comment.Group>
+        </FileUpload>
       </Messages>
     );
   }
 }
+
 const messagesQuery = gql`
   query($channelId: Int!) {
     messages(channelId: $channelId) {
@@ -134,7 +105,6 @@ export default graphql(messagesQuery, {
     channelId: props.channelId
   }),
   options: {
-    // Not reading from local cache, it reads from server every time
     fetchPolicy: "network-only"
   }
 })(MessageContainer);
