@@ -27,7 +27,7 @@ export default {
   },
   Mutation: {
     createMessage: requiresAuth.createResolver(
-      async (parent, args, { models, user }) => {
+      async (parent, { file, ...args }, { models, user }) => {
         try {
           const messageData = args;
           if (file) {
@@ -46,6 +46,11 @@ export default {
               }
             });
 
+            console.log({
+              ...message.dataValues,
+              user: currentUser.dataValues
+            });
+
             pubsub.publish(NEW_CHANNEL_MESSAGE, {
               channelId: args.channelId,
               newChannelMessage: {
@@ -58,13 +63,16 @@ export default {
           asyncFunc();
 
           return true;
-        } catch (error) {
+        } catch (err) {
+          console.log(err);
           return false;
         }
-      } // bcrypt password
+      }
     )
   },
   Message: {
+    url: parent =>
+      parent.url ? `http://localhost:4001/${parent.url}` : parent.url,
     user: ({ user, userId }, args, { models }) => {
       if (user) {
         return user;

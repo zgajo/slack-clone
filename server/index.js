@@ -55,11 +55,6 @@ const readToken = async (req, res, next) => {
   next();
 };
 
-// parse application/json
-app.use(bodyParser.json());
-app.use(readToken);
-app.use(cors("*"));
-
 const SECRET = "sdfAsds:_:As!";
 const SECRET2 = "23213$%&$#$LKJdsš";
 
@@ -100,6 +95,11 @@ const fileMiddleware = (req, res, next) => {
 
 const graphqlEndpoint = "/graphql";
 
+// parse application/json
+app.use(bodyParser.json());
+app.use(readToken);
+app.use(cors("*"));
+
 // The GraphQL endpoint
 app.use(
   graphqlEndpoint,
@@ -125,6 +125,7 @@ app.use(
   })
 );
 
+app.use("/files", express.static("files"));
 const server = createServer(app);
 
 models.sequelize.sync({ force: false }).then(() => {
