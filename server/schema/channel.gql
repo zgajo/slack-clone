@@ -16,5 +16,6 @@ type Mutation {
     name: String!
     teamId: Int!
     public: Boolean = false
+    members: [Int!]
   ): ChannelResponse
 }
