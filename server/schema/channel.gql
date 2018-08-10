@@ -3,6 +3,7 @@ type Channel {
   name: String!
   messages: [Message!]! #array of messages
   users: [User!]!
+  dm: Boolean!
 }
 
 type ChannelResponse {
@@ -18,4 +19,6 @@ type Mutation {
     public: Boolean = false
     members: [Int!]
   ): ChannelResponse
+
+  getOrCreateChannel(teamId: Int!, members: [Int!]!): Int!
 }
