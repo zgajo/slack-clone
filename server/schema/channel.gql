@@ -1,24 +1,26 @@
 type Channel {
   id: Int!
   name: String!
-  messages: [Message!]! #array of messages
+  public: Boolean!
+  messages: [Message!]!
   users: [User!]!
   dm: Boolean!
 }
-
 type ChannelResponse {
   ok: Boolean!
   channel: Channel
   errors: [Error!]
 }
-
+type DMChannelResponse {
+  id: Int!
+  name: String!
+}
 type Mutation {
   createChannel(
-    name: String!
     teamId: Int!
+    name: String!
     public: Boolean = false
-    members: [Int!]
-  ): ChannelResponse
-
-  getOrCreateChannel(teamId: Int!, members: [Int!]!): Int!
+    members: [Int!] = []
+  ): ChannelResponse!
+  getOrCreateChannel(teamId: Int!, members: [Int!]!): DMChannelResponse!
 }

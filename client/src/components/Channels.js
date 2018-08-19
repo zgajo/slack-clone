@@ -46,14 +46,14 @@ const Green = styled.span`
 const Bubble = ({ on = true }) => (on ? <Green>●</Green> : "○");
 
 const channel = ({ id, name }, teamId) => (
-  <Link to={`/view_team/${teamId}/${id}`} key={`channel-${id}`}>
+  <Link key={`channel-${id}`} to={`/view_team/${teamId}/${id}`}>
     <SideBarListItem># {name}</SideBarListItem>
   </Link>
 );
 
 const dmChannel = ({ id, name }, teamId) => (
   <SideBarListItem key={`user-${id}`}>
-    <Link to={`/view_team/user/${teamId}/${id}`}>
+    <Link to={`/view_team/${teamId}/${id}`}>
       <Bubble /> {name}
     </Link>
   </SideBarListItem>
@@ -81,7 +81,7 @@ export default ({
           Channels{" "}
           {isOwner && <Icon onClick={onAddChannelClick} name="add circle" />}
         </SideBarListHeader>
-        {channels.map(x => channel(x, teamId))}
+        {channels.map(c => channel(c, teamId))}
       </SideBarList>
     </div>
     <div>
@@ -90,12 +90,14 @@ export default ({
           Direct Messages{" "}
           <Icon onClick={onDirectMessageClick} name="add circle" />
         </SideBarListHeader>
-        {dmChannels.map(u => dmChannel(u, teamId))}
+        {dmChannels.map(dmC => dmChannel(dmC, teamId))}
       </SideBarList>
     </div>
     {isOwner && (
-      <div href="#invite-people" onClick={onInvitePeopleClick}>
-        + Invite People
+      <div>
+        <a href="#invite-people" onClick={onInvitePeopleClick}>
+          + Invite People
+        </a>
       </div>
     )}
   </ChannelWrapper>

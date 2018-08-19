@@ -19,7 +19,7 @@ const ViewTeam = ({
     params: { teamId, channelId }
   }
 }) => {
-  if (loading) return null;
+  if (loading || !me) return null;
 
   const { id: currentUserId, teams, username } = me;
 
