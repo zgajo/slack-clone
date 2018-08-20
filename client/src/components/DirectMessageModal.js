@@ -71,7 +71,7 @@ export default compose(
       { members },
       { props: { history, onClose, teamId, mutate }, resetForm, setSubmitting }
     ) => {
-      const response = await mutate({
+      await mutate({
         variables: { members, teamId },
         update: (store, { data: { getOrCreateChannel } }) => {
           const { id, name } = getOrCreateChannel;
@@ -94,9 +94,6 @@ export default compose(
           history.push(`/view_team/${teamId}/${id}`);
         }
       });
-      console.log(response);
-      onClose();
-      resetForm();
     }
   })
 )(DirectMessageModal);
