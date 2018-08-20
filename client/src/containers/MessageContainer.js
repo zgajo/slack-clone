@@ -74,7 +74,7 @@ class MessageContainer extends React.Component {
 
         return {
           ...prev,
-          messages: [...prev.messages, subscriptionData.data.newChannelMessage]
+          messages: [subscriptionData.data.newChannelMessage, ...prev.messages]
         };
       }
     });
@@ -107,6 +107,7 @@ class MessageContainer extends React.Component {
                     channelId: this.props.channelId,
                     offset: this.props.data.messages.length
                   },
+                  fetchPolicy: "netwerk-only",
                   updateQuery: (previousResult, { fetchMoreResult }) => {
                     if (!fetchMoreResult) return previousResult;
 
@@ -129,7 +130,7 @@ class MessageContainer extends React.Component {
             </Button>
           )}
           {messages &&
-            messages.map(m => (
+            [...messages].reverse().map(m => (
               <Comment key={`${m.id}-message`}>
                 <Comment.Content>
                   <Comment.Author as="a">{m.user.username}</Comment.Author>
