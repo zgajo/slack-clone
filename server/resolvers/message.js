@@ -18,7 +18,7 @@ export default {
   },
   Query: {
     messages: requiresAuth.createResolver(
-      async (parent, { offset, channelId }, { models, user }) => {
+      async (parent, { cursor, channelId }, { models, user }) => {
         const channel = await models.Channel.findOne({
           raw: true,
           where: { id: channelId }
@@ -34,15 +34,21 @@ export default {
           }
         }
 
-        return models.Message.findAll(
-          {
-            order: [["created_at", "DESC"]],
-            where: { channelId },
-            limit: 5,
-            offset
-          },
-          { raw: true }
-        );
+        const options = {
+          order: [["created_at", "DESC"]],
+          where: { channelId },
+          limit: 5
+        };
+
+        if (cursor) {
+          // sequelize model messages has to have indexed creted_at field,
+          // so it could work faster
+          options.where.created_at = {
+            [models.sequelize.Op.lt]: cursor
+          };
+        }
+
+        return models.Message.findAll(options, { raw: true });
       }
     )
   },

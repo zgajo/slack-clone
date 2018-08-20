@@ -105,7 +105,7 @@ class MessageContainer extends React.Component {
                 this.props.data.fetchMore({
                   variables: {
                     channelId: this.props.channelId,
-                    offset: this.props.data.messages.length
+                    cursor: messages[messages.length - 1].created_at
                   },
                   fetchPolicy: "netwerk-only",
                   updateQuery: (previousResult, { fetchMoreResult }) => {
@@ -151,8 +151,8 @@ class MessageContainer extends React.Component {
 }
 
 const messagesQuery = gql`
-  query($offset: Int!, $channelId: Int!) {
-    messages(offset: $offset, channelId: $channelId) {
+  query($cursor: String, $channelId: Int!) {
+    messages(cursor: $cursor, channelId: $channelId) {
       id
       text
       user {
@@ -169,7 +169,6 @@ export default graphql(messagesQuery, {
   options: props => ({
     fetchPolicy: "network-only",
     variables: {
-      offset: 0,
       channelId: props.channelId
     }
   })
