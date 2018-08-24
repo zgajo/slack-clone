@@ -1,12 +1,13 @@
 {
-  "presets": ["env", "stage-3"],
-  "plugins": [
+  "presets": [
     [
-      "transform-runtime",
+      "env",
       {
-        "polyfill": false,
-        "regenerator": true
+        "targets": {
+          "node": "10.9"
+        }
       }
     ]
-  ]
+  ],
+  "plugins": ["transform-object-rest-spread"]
 }
