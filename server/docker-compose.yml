@@ -14,6 +14,8 @@ services:
       POSTGRES_PASSWORD: 1111
       POSTGRES_USER: dpranjic
       POSTGRES_DB: slack
+    ports:
+      - "3030:5432"
   web:
     image: server
     ports:

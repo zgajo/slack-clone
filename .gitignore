@@ -1,3 +1,4 @@
 /server/node_modules
 /server/pgdata
+/server/dump.sql
 /client/node_modules
