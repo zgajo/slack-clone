@@ -10,7 +10,7 @@ var _sequelize2 = _interopRequireDefault(_sequelize);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var sequelize = new _sequelize2.default(process.env.TEST_DB || "slack", "dpranjic", "1111", {
+const sequelize = new _sequelize2.default(process.env.TEST_DB || "slack", "dpranjic", "1111", {
   dialect: "postgres",
   operatorsAliases: _sequelize2.default.Op, // to ger rid of Sequelize depricate error message
   define: {
@@ -18,7 +18,7 @@ var sequelize = new _sequelize2.default(process.env.TEST_DB || "slack", "dpranji
   }
 });
 
-var models = {
+const models = {
   User: sequelize.import("./user"),
   Channel: sequelize.import("./channel"),
   Team: sequelize.import("./team"),
@@ -28,7 +28,7 @@ var models = {
   PCMember: sequelize.import("./pcmember")
 };
 
-Object.keys(models).forEach(function (modelName) {
+Object.keys(models).forEach(modelName => {
   if ("associate" in models[modelName]) {
     models[modelName].associate(models);
   }
