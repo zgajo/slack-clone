@@ -1,3 +1,4 @@
+export default `
 type User {
   id: Int!
   username: String!
@@ -32,3 +33,4 @@ type RegisterResponse {
   user: User
   errors: [Error!]
 }
+`;

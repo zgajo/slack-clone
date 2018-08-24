@@ -1,3 +1,4 @@
+export default `
 type Team {
   id: Int!
   name: String!
@@ -28,3 +29,4 @@ type Mutation {
   createTeam(name: String!): CreateTeamResponse!
   addTeamMember(email: String!, teamId: Int!): VoidResponse!
 }
+`;

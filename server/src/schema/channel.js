@@ -1,3 +1,4 @@
+export default `
 type Channel {
   id: Int!
   name: String!
@@ -24,3 +25,4 @@ type Mutation {
   ): ChannelResponse!
   getOrCreateChannel(teamId: Int!, members: [Int!]!): DMChannelResponse!
 }
+`;

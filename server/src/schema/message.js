@@ -1,3 +1,4 @@
+export default `
 type Message {
   id: Int!
   text: String
@@ -20,3 +21,4 @@ type Query {
 type Mutation {
   createMessage(channelId: Int!, text: String, file: File): Boolean!
 }
+`;
