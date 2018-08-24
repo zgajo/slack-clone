@@ -13,9 +13,12 @@ import { PubSub } from "graphql-subscriptions";
 import { SubscriptionServer } from "subscriptions-transport-ws";
 import formidable from "formidable";
 
+import DataLoader from "dataloader";
+
 import models from "./models";
 
 import { refreshTokens } from "./auth";
+import { channelBatcher } from "./batchFunctions";
 
 const typeDefs = mergeTypes(fileLoader(path.join(__dirname, "./schema")));
 const resolvers = mergeResolvers(
@@ -111,7 +114,10 @@ app.use(
       models,
       user: req.user,
       SECRET,
-      SECRET2
+      SECRET2,
+      channelLoader: new DataLoader(ids =>
+        channelBatcher(ids, models, req.user)
+      )
     }
   }))
 );
