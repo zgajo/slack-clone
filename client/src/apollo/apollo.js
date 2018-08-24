@@ -9,11 +9,11 @@ import createFileLink from "./createFileLink";
 
 import { getTokenMiddleware, setTokenAfterware } from "./middleware/token";
 
-const httpLink = createFileLink({ uri: "http://localhost:4001/graphql" });
+const httpLink = createFileLink({ uri: "http://localhost:8081/graphql" });
 
 // Create a WebSocket link:
 export const wsLink = new WebSocketLink({
-  uri: `ws://localhost:4001/subscriptions`,
+  uri: `ws://localhost:8081/subscriptions`,
   options: {
     reconnect: true,
     lazy: true,

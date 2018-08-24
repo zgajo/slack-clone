@@ -128,7 +128,7 @@ app.use(
   "/graphiql",
   graphiqlExpress({
     endpointURL: "/graphql",
-    subscriptionsEndpoint: "ws://localhost:4001/subscriptions"
+    subscriptionsEndpoint: "ws://localhost:8081/subscriptions"
   })
 );
 
@@ -138,7 +138,7 @@ const server = createServer(app);
 models.sequelize.sync({ force: false }).then(() => {
   // Start the server
 
-  server.listen(4001, () => {
+  server.listen(8081, () => {
     new SubscriptionServer(
       {
         execute,
@@ -170,6 +170,6 @@ models.sequelize.sync({ force: false }).then(() => {
         path: "/subscriptions"
       }
     );
-    console.log("Go to http://localhost:4001/graphiql to run queries!");
+    console.log("Go to http://localhost:8081/graphiql to run queries!");
   });
 });

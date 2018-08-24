@@ -22,7 +22,7 @@ describe("User resolvers", function () {
         switch (_context.prev = _context.next) {
           case 0:
             _context.next = 2;
-            return _axios2.default.post("http://localhost:4001/graphql", {
+            return _axios2.default.post("http://localhost:8081/graphql", {
               query: "\n          {\n              allUsers {\n                  id\n                  username\n                  email\n              }\n          }\n          "
             });
 
@@ -52,7 +52,7 @@ describe("User resolvers", function () {
         switch (_context2.prev = _context2.next) {
           case 0:
             _context2.next = 2;
-            return _axios2.default.post("http://localhost:4001/graphql", {
+            return _axios2.default.post("http://localhost:8081/graphql", {
               query: "\n              mutation{\n                  register(username: \"testuser\", email:\"test@test.hr\", password: \"passtest\") {\n                      ok\n                      errors{\n                          path\n                          message\n                      }\n                      user{\n                          username\n                          email\n                      }\n                  }\n              }\n              "
             });
 
@@ -90,7 +90,7 @@ describe("User resolvers", function () {
         switch (_context3.prev = _context3.next) {
           case 0:
             _context3.next = 2;
-            return _axios2.default.post("http://localhost:4001/graphql", {
+            return _axios2.default.post("http://localhost:8081/graphql", {
               query: "\n        mutation{\n            login(email: \"test@test.hr\", password: \"passtest\") {\n              ok\n              token\n              refreshToken\n              errors {\n                path\n                message\n              }\n            }\n          }\n                "
             });
 
@@ -102,7 +102,7 @@ describe("User resolvers", function () {
             expect(ok).toBeTruthy();
 
             _context3.next = 7;
-            return _axios2.default.post("http://localhost:4001/graphql", {
+            return _axios2.default.post("http://localhost:8081/graphql", {
               query: "\n        mutation {\n            createTeam(name: \"team1\") {\n              ok\n              team {\n                name\n              }\n            }\n          }\n                  "
             }, {
               headers: {

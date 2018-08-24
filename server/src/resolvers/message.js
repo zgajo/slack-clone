@@ -99,7 +99,7 @@ export default {
   },
   Message: {
     url: (parent, args, { server_url }) =>
-      parent.url ? `${server_url}/${parent.url}` : parent.url,
+      parent.url ? `${process.env.SERVER_URL || 'http://localhost:8081'}/${parent.url}` : parent.url,
     user: ({ user, userId }, args, { models }) => {
       if (user) {
         return user;

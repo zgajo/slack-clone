@@ -143,7 +143,7 @@ app.use(graphqlEndpoint, _bodyParser2.default.json(), fileMiddleware, (0, _apoll
 // GraphiQL, a visual editor for queries
 app.use("/graphiql", (0, _apolloServerExpress.graphiqlExpress)({
   endpointURL: "/graphql",
-  subscriptionsEndpoint: "ws://localhost:4001/subscriptions"
+  subscriptionsEndpoint: "ws://localhost:8081/subscriptions"
 }));
 
 app.use("/files", _express2.default.static("files"));
@@ -152,7 +152,7 @@ const server = (0, _http.createServer)(app);
 _models2.default.sequelize.sync({ force: false }).then(() => {
   // Start the server
 
-  server.listen(4001, () => {
+  server.listen(8081, () => {
     new _subscriptionsTransportWs.SubscriptionServer({
       execute: _graphql.execute,
       subscribe: _graphql.subscribe,
@@ -175,6 +175,6 @@ _models2.default.sequelize.sync({ force: false }).then(() => {
       server,
       path: "/subscriptions"
     });
-    console.log("Go to http://localhost:4001/graphiql to run queries!");
+    console.log("Go to http://localhost:8081/graphiql to run queries!");
   });
 });
