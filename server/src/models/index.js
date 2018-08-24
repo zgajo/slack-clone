@@ -7,6 +7,7 @@ const sequelize = new Sequelize(
   {
     dialect: "postgres",
     operatorsAliases: Sequelize.Op, // to ger rid of Sequelize depricate error message
+    host: process.env.DB_HOST || "localhost",
     define: {
       underscored: true
     }

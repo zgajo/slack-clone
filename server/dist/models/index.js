@@ -13,6 +13,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 const sequelize = new _sequelize2.default(process.env.TEST_DB || "slack", "dpranjic", "1111", {
   dialect: "postgres",
   operatorsAliases: _sequelize2.default.Op, // to ger rid of Sequelize depricate error message
+  host: process.env.DB_HOST || "localhost",
   define: {
     underscored: true
   }

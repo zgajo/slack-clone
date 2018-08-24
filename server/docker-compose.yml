@@ -1,0 +1,19 @@
+version: "3"
+services:
+  redis:
+    image: redis
+  db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: 1111
+      POSTGRES_USER: dpranjic
+      POSTGRES_DB: slack
+  web:
+    image: server
+    build: .
+    ports:
+      - "4001:4001"
+    environment:
+      DB_HOST: db
+      REDIS_HOST: redis
+    command: ["./wait-for-it.sh", "db:5432", "--", "node", "index.js"]
