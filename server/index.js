@@ -117,7 +117,8 @@ app.use(
       SECRET2,
       channelLoader: new DataLoader(ids =>
         channelBatcher(ids, models, req.user)
-      )
+      ),
+      server_url: `${req.protocol}://${req.get("host")}`
     }
   }))
 );
