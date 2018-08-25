@@ -18,7 +18,7 @@ import DataLoader from "dataloader";
 import models from "./models";
 
 import { refreshTokens } from "./auth";
-import { channelBatcher } from "./batchFunctions";
+import { channelBatcher, userBatcher } from "./batchFunctions";
 
 const typeDefs = mergeTypes(fileLoader(path.join(__dirname, "./schema")));
 const resolvers = mergeResolvers(
@@ -118,6 +118,7 @@ app.use(
       channelLoader: new DataLoader(ids =>
         channelBatcher(ids, models, req.user)
       ),
+      userLoader: new DataLoader(ids => userBatcher(ids, models)),
       server_url: `${req.protocol}://${req.get("host")}`
     }
   }))

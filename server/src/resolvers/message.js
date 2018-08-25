@@ -99,12 +99,14 @@ export default {
   },
   Message: {
     url: (parent, args, { server_url }) =>
-      parent.url ? `${process.env.SERVER_URL || 'http://localhost:8081'}/${parent.url}` : parent.url,
-    user: ({ user, userId }, args, { models }) => {
+      parent.url
+        ? `${process.env.SERVER_URL || "http://localhost:8081"}/${parent.url}`
+        : parent.url,
+    user: ({ user, userId }, args, { userLoader }) => {
       if (user) {
         return user;
       }
-      return models.User.findOne({ where: { id: userId } });
+      return userLoader.load(userId);
     }
   }
 };
