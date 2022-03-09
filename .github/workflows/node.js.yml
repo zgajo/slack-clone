@@ -24,6 +24,7 @@ jobs:
       with:
         node-version: 10.x
     - run: echo ${{env.BRANCH_NAME}}
-    - run: npm ci #does clean install of the packages into the ci container
-    - run: npm run build --if-present
-    - run: npm test
+    - name: Listen to master branch
+      if: ${{env.BRANCH_NAME}} == 'master'
+      run: |
+        echo ${{env.BRANCH_NAME}}
