@@ -27,4 +27,4 @@ jobs:
     - name: Listen to master branch
       if: ${{env.BRANCH_NAME}} == 'master'
       run: |
-        echo ${{env.BRANCH_NAME}}
+        echo ${{env.BRANCH_NAME}} and banana
