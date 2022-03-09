@@ -28,11 +28,12 @@ jobs:
       if: ${{env.BRANCH_NAME}} == 'develop'
       env:
           SECRET: ${{ secrets.DEV }}
+      run: echo ${{env.SECRET}}
     - name: Listen to master branch
       if: ${{env.BRANCH_NAME}} == 'master'
       env:
           SECRET: ${{ secrets.PROD }}
-          
+      run: echo ${{env.SECRET}}  
     - name: Test secret env variable
       run: echo ${{env.SECRET}}
 
