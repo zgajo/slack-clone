@@ -37,4 +37,10 @@ jobs:
       run: echo "master" 
     - name: Test secret env variable
       run: echo ${{env.BANANA}}
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - run: ls
+
 
