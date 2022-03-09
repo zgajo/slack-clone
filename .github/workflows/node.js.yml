@@ -37,10 +37,23 @@ jobs:
       run: echo "master" 
     - name: Test secret env variable
       run: echo ${{env.BANANA}}
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v3.0.0
+      with:
+        # Artifact name
+        name: my-artifact
+        # A file, directory or wildcard pattern that describes what to upload
+        path: .
+
   test:
     needs: build
     runs-on: ubuntu-latest
     steps:
+    - name: Download a Build Artifact
+      uses: actions/download-artifact@v3.0.0
+      with:
+        # Artifact name
+        name: my-artifact
     - run: ls
 
 
