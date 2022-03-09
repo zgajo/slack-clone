@@ -25,11 +25,15 @@ jobs:
         node-version: 10.x
     - run: echo ${{env.BRANCH_NAME}}
     - name: Listen to develop branch
-      if: ${{env.BRANCH_NAME}} == 'develop'
+      if: ${{ github.ref == 'refs/heads/develop' }}
+      env:
+          BANANA: "develop"
       run: echo "dev" >> $BANANA
     - name: Listen to master branch
-      if: ${{env.BRANCH_NAME}} == 'master'
-      run: echo "master" >> $BANANA
+      if: ${{ github.ref == 'refs/heads/master' }}
+      env:
+          BANANA: "master"
+      run: echo "master" 
     - name: Test secret env variable
       run: echo ${{env.BANANA}}
 
