@@ -34,7 +34,7 @@ jobs:
           ${{ runner.os }}-node-modules-
     - name: Install Dependencies
       if: steps.cache-nodemodules.outputs.cache-hit != 'true'
-      run: cd client && npm i && cd ..
+      run: cd client && npm ci && cd ..
     - run: echo ${{env.BRANCH_NAME}}
     - name: Listen to develop branch
       if: ${{ github.ref == 'refs/heads/develop' }}
