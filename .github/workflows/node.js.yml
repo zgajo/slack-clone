@@ -25,6 +25,5 @@ jobs:
         node-version: 10.x
     - run: echo ${{env.BRANCH_NAME}}
     - name: Listen to master branch
-      if: ${{env.BRANCH_NAME}} == 'master'
-      run: |
-        echo ${{env.BRANCH_NAME}} and banana
+      if: ${{env.BRANCH_NAME}} == 'develop'
+      run: echo ${{env.BRANCH_NAME}} and banana
