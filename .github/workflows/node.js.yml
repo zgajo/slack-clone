@@ -23,6 +23,7 @@ jobs:
       uses: actions/setup-node@v2 #tells which node to use
       with:
         node-version: 10.x
+    - run: ll
     - run: echo ${{env.BRANCH_NAME}}
     - name: Listen to develop branch
       if: ${{ github.ref == 'refs/heads/develop' }}
