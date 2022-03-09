@@ -26,10 +26,10 @@ jobs:
     - run: echo ${{env.BRANCH_NAME}}
     - name: Listen to develop branch
       if: ${{env.BRANCH_NAME}} == 'develop'
-      run: echo "dev" >> $SECRET
+      run: echo "dev" >> $BANANA
     - name: Listen to master branch
       if: ${{env.BRANCH_NAME}} == 'master'
-      run: echo "master" >> $SECRET
+      run: echo "master" >> $BANANA
     - name: Test secret env variable
-      run: echo ${{env.SECRET}}
+      run: echo ${{env.BANANA}}
 
