@@ -4,7 +4,7 @@
 name: Node.js CI
 
 env:
-  BRANCH_NAME: echo ${GITHUB_REF##*/}
+  BRANCH_NAME: ${GITHUB_REF##*/}
 
 on:
   push:
