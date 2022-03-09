@@ -27,7 +27,7 @@ jobs:
     - uses: actions/cache@v2
       with:
         path: '**/node_modules'
-        key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+        key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
     - run: cd client && npm i && cd ..
     - run: echo ${{env.BRANCH_NAME}}
     - name: Listen to develop branch
