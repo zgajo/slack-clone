@@ -24,6 +24,10 @@ jobs:
       with:
         node-version: 10.x
     - run: ls
+    - uses: actions/cache@v2
+      with:
+        path: '**/node_modules'
+        key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
     - run: cd client && npm i && cd ..
     - run: echo ${{env.BRANCH_NAME}}
     - name: Listen to develop branch
