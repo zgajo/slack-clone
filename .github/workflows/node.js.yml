@@ -24,6 +24,15 @@ jobs:
       with:
         node-version: 10.x
     - run: echo ${{env.BRANCH_NAME}}
-    - name: Listen to master branch
+    - name: Listen to develop branch
       if: ${{env.BRANCH_NAME}} == 'develop'
-      run: echo ${{env.BRANCH_NAME}} and banana
+      env:
+          SECRET: ${{ secrets.DEV }}
+    - name: Listen to master branch
+      if: ${{env.BRANCH_NAME}} == 'master'
+      env:
+          SECRET: ${{ secrets.PROD }}
+          
+    - name: Test secret env variable
+      run: echo ${{env.SECRET}}
+
