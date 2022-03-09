@@ -24,11 +24,17 @@ jobs:
       with:
         node-version: 10.x
     - run: ls
-    - uses: actions/cache@v2
+    - name: Cache node modules
+      id: cache-nodemodules
+      uses: actions/cache@v2
       with:
         path: '**/node_modules'
-        key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
-    - run: cd client && npm i && cd ..
+        key: ${{ runner.os }}-modules-modules-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-modules-
+    - name: Install Dependencies
+      if: steps.cache-nodemodules.outputs.cache-hit != 'true'
+      run: cd client && npm i && cd ..
     - run: echo ${{env.BRANCH_NAME}}
     - name: Listen to develop branch
       if: ${{ github.ref == 'refs/heads/develop' }}
