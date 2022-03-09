@@ -24,6 +24,7 @@ jobs:
       with:
         node-version: 10.x
     - run: ls
+    - run: cd client && npm i && cd ..
     - run: echo ${{env.BRANCH_NAME}}
     - name: Listen to develop branch
       if: ${{ github.ref == 'refs/heads/develop' }}
