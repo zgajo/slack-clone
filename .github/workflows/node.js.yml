@@ -24,6 +24,7 @@ jobs:
       with:
         node-version: 10.x
     - run: ls
+    - run: yarn --version
     - name: Cache node modules
       id: cache-nodemodules
       uses: actions/cache@v2
